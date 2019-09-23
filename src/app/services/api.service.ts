@@ -23,7 +23,7 @@ export class ApiService {
   postSelectedAction$ = this.postSelectedAction.asObservable();
 
   private applySelectedFilter = new Subject<string>();
-  applySelectedFilter$ = this.applySelectedFilter.asObservable().pipe(startWith(''));
+  applySelectedFilter$ = this.applySelectedFilter.asObservable().pipe(startWith(' '));
 
   // DATA STREAMS
   posts$ = this.http.get<Post[]>(this.postsUrl, httpOptions).pipe(
@@ -53,7 +53,14 @@ export class ApiService {
   filteredPosts$ = combineLatest(this.applySelectedFilter$, this.postsWithUsers$).pipe(
     tap(([filterStr, posts]) => console.log(filterStr)),
     map(([filterStr, posts]) =>
-      posts.filter(post => post.title.indexOf(filterStr) !== -1)
+      posts.filter(post => {
+        return (
+          post.title.toLowerCase().indexOf(filterStr.toLowerCase()) !== -1 ||
+          String(post.id).indexOf(filterStr.toLowerCase()) !== -1 ||
+          post.userData.name.toLowerCase().indexOf(filterStr.toLowerCase()) !== -1 ||
+          post.userData.username.toLowerCase().indexOf(filterStr.toLowerCase()) !== -1
+        );
+      })
     )
   );
 

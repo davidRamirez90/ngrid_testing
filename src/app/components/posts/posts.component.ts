@@ -4,7 +4,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { catchError, tap, map, filter, distinct, switchMap } from 'rxjs/operators';
 import { User, Post, ExtendedPost } from 'src/app/interfaces/app';
 import { createDS, columnFactory, PblNgridComponent } from '@pebula/ngrid';
-import { ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-posts',
@@ -15,7 +15,7 @@ import { ViewChild } from '@angular/core';
 })
 export class PostsComponent {
   errorMessage: string;
-  serachTerm: string;
+  searchTerm: string;
 
   posts$ = this.apiService.postsWithUsers$.pipe(
     // tap(console.log),
@@ -68,7 +68,11 @@ export class PostsComponent {
     .onTrigger(() => this.filtPosts$)
     .create();
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   postSelected(selectedPostId: number) {
     this.apiService.changeSelectedPost(selectedPostId);
@@ -84,5 +88,10 @@ export class PostsComponent {
 
   filterChanged(term, col) {
     this.apiService.applyFilter(term);
+  }
+
+  clearFilter() {
+    this.apiService.applyFilter('');
+    this.searchTerm = '';
   }
 }
