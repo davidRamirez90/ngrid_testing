@@ -1,0 +1,85 @@
+<h1>Posts list</h1>
+
+<section>Selected Post List</section>
+<div *ngIf="vm$ | async as vm">
+  <div *ngIf="selPost$ | async as selPost" class="selected-product">
+    {{ selPost | json }}
+  </div>
+
+  <section>User Ids List</section>
+
+  <ul>
+    <li *ngFor="let id of vm.userIdsList">
+      <b>{{ id }}</b>
+    </li>
+  </ul>
+
+  <section (click)="printDs()">Post List</section>
+
+  <pbl-ngrid
+    style="height: 500px"
+    bulkSelectMode="all"
+    matSort
+    blockUi
+    [dataSource]="ds"
+    [columns]="columns"
+    matCheckboxSelection="selection"
+    class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis"
+  >
+    <!-- HANDLER FOR MORE OPTION ON TABLE HEADER -->
+    <div
+      *pblNgridHeaderExtensionRef="let ctx"
+      style="position: absolute; right: 0; height: 100%; cursor: pointer; margin-right: 12px;"
+      [matMenuTriggerFor]="columnMenu"
+      [matMenuTriggerData]="ctx"
+      fxLayoutAlign="center center"
+    >
+      <mat-icon style="height: 16px; width: 16px; font-size: 16px; line-height: 16px;">
+        more_vert
+      </mat-icon>
+    </div>
+    <!-- EXTENDED OPTIONS MENU - ALL COMPONENTS  -->
+    <!-- TOP LEVEL MENU ITEMS, SHOWN ON CLICK -->
+    <mat-menu #columnMenu="matMenu">
+      <ng-template matMenuContent let-ctx>
+        <!-- <button
+          mat-menu-item
+          [matMenuTriggerFor]="columnSortMenu"
+          [matMenuTriggerData]="ctx"
+          [disabled]="!ctx.col.sort"
+        >
+          Sort
+        </button> -->
+        <mat-form-field>
+          <label for="filterInput">Filter</label>
+          <input
+            id="filterInput"
+            matInput
+            type="text"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="filterChanged(searchTerm, ctx)"
+            (click)="$event.stopPropagation()"
+          />
+        </mat-form-field>
+      </ng-template>
+    </mat-menu>
+    <!-- SUBMENUS FOR SORT MENU ITEM -->
+    <!-- <mat-menu #columnSortMenu="matMenu">
+      <ng-template matMenuContent let-ctx>
+        <button mat-menu-item (click)="ctx.table.ds.setSort()">None</button>
+        <button mat-menu-item (click)="ctx.table.ds.setSort(ctx.col, { order: 'asc' })">
+          Asc
+        </button>
+        <button mat-menu-item (click)="ctx.table.ds.setSort(ctx.col, { order: 'desc' })">
+          Desc
+        </button>
+      </ng-template>
+    </mat-menu> -->
+  </pbl-ngrid>
+
+  <!-- <ul>
+    <li (click)="postSelected(post.id)" *ngFor="let post of vm.posts">
+      <b>{{ post.title }}</b> / {{ post.userData.name }}
+    </li>
+  </ul> -->
+</div>
