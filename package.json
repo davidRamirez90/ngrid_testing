@@ -25,6 +25,7 @@
     "@angular/platform-browser-dynamic": "8.2.2",
     "@angular/router": "8.2.2",
     "@ngxs/store": "3.3.4",
+    "@ngxs/devtools-plugin": "3.3.4",
     "@pebula/ngrid": "^1.0.0-rc.9",
     "@pebula/ngrid-material": "^1.0.0-rc.9",
     "@pebula/utils": "^1.0.0",

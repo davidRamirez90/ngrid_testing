@@ -12,21 +12,18 @@ import { PostComponent } from './components/post/post.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PblNgridModule } from '@pebula/ngrid';
 import { PblNgridMaterialModule } from '@pebula/ngrid-material';
-import { TableTemplateComponent } from './components/table-template/table-template.component';
 import { PblNgridBlockUiModule } from '@pebula/ngrid/block-ui';
 import { PblNgridOverlayPanelModule } from '@pebula/ngrid/overlay-panel';
 import { PblNgridMatSortModule } from '@pebula/ngrid-material/sort';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+
+import { NGXS_PLUGINS, NgxsModule } from '@ngxs/store';
 
 import { MATERIAL } from './material-imports';
+import { AppState } from './store/posts.state';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeComponent,
-    PostsComponent,
-    PostComponent,
-    TableTemplateComponent
-  ],
+  declarations: [AppComponent, HomeComponent, PostsComponent, PostComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -39,7 +36,9 @@ import { MATERIAL } from './material-imports';
     BrowserAnimationsModule,
     FlexLayoutModule,
     FormsModule,
-    PblNgridMatSortModule
+    PblNgridMatSortModule,
+    NgxsModule.forRoot([AppState], { developmentMode: true }),
+    NgxsReduxDevtoolsPluginModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

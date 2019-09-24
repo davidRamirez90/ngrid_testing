@@ -1,3 +1,8 @@
+export interface AppStateModel {
+  posts: ExtendedPost[];
+  currSelected: ExtendedPost;
+}
+
 export interface Post {
   userId: number;
   id: number;

@@ -23,7 +23,7 @@ export class ApiService {
   postSelectedAction$ = this.postSelectedAction.asObservable();
 
   private applySelectedFilter = new Subject<string>();
-  applySelectedFilter$ = this.applySelectedFilter.asObservable().pipe(startWith(' '));
+  applySelectedFilter$ = this.applySelectedFilter.asObservable().pipe(startWith(''));
 
   // DATA STREAMS
   posts$ = this.http.get<Post[]>(this.postsUrl, httpOptions).pipe(
