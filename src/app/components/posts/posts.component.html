@@ -2,6 +2,7 @@
 
 <section>Selected Post List</section>
 <!-- <div *ngIf="vm$ | async as vm"> -->
+<button (click)="manualSorting()">Sort</button>
 <div *ngIf="selPost$ | async as selPost" class="selected-product">
   {{ selPost | json }}
 </div>
@@ -29,7 +30,6 @@
     matInput
     type="text"
     [(ngModel)]="searchTerm"
-    (ngModelChange)="filterChanged(searchTerm, ctx)"
     (click)="$event.stopPropagation()"
   />
   <button
@@ -47,7 +47,6 @@
   style="height: 500px"
   bulkSelectMode="all"
   matSort
-  blockUi
   [dataSource]="ds"
   [columns]="columns"
   matCheckboxSelection="selection"

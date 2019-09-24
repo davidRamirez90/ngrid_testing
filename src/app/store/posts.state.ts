@@ -26,7 +26,7 @@ export class AppState {
     return createSelector(
       [AppState],
       (state: AppStateModel) => {
-        console.log(state.posts);
+        // console.log(state.posts);
         return state.posts.filter(
           post =>
             post.title.toLowerCase().indexOf(searchString.toLowerCase()) !== -1 ||
