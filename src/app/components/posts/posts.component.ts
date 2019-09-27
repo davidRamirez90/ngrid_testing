@@ -23,20 +23,30 @@ import {
   share
 } from 'rxjs/operators';
 import { User, Post, ExtendedPost } from 'src/app/interfaces/app';
-import { createDS, columnFactory, PblNgridComponent, PblNgridSortOrder, PblColumn } from '@pebula/ngrid';
+import {
+  createDS,
+  columnFactory,
+  PblNgridComponent,
+  PblNgridSortOrder,
+  PblColumn
+} from '@pebula/ngrid';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store, Actions, ofActionSuccessful, Select } from '@ngxs/store';
 import { AppState } from 'src/app/store/posts.state';
 import { LoadPosts, LoadPosts2 } from 'src/app/store/posts.actions';
+import { PblNgridRowEvent } from '@pebula/ngrid/target-events';
 
-const titleFilter = (filterValue: string, title: string) => title.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1 
+const titleFilter = (filterValue: string, title: string) =>
+  title.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1;
 const idFilter = (filterValue: string, id: number) => {
   console.log(id);
-  
-  return String(id).indexOf(filterValue.toLowerCase()) !== -1 
-}
-const nameFilter = (filterValue: string, name: string) => name.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1 
-const usernameFilter = (filterValue: string, username: string) => username.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1 
+
+  return String(id).indexOf(filterValue.toLowerCase()) !== -1;
+};
+const nameFilter = (filterValue: string, name: string) =>
+  name.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1;
+const usernameFilter = (filterValue: string, username: string) =>
+  username.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1;
 
 @Component({
   selector: 'app-posts',
@@ -54,7 +64,6 @@ export class PostsComponent implements OnInit, AfterViewInit {
     private actions$: Actions,
     private renderer: Renderer
   ) {
-
     this.store
       .dispatch(new LoadPosts2())
       .pipe(tap(d => console.log(d)))
@@ -106,15 +115,15 @@ export class PostsComponent implements OnInit, AfterViewInit {
   //   map(([posts, userIdsList]) => ({ posts, userIdsList }))
   // );
 
-  // PBL 
+  // PBL
 
-  a: string ="";
+  a = '';
   columns = columnFactory()
     .table(
       { prop: 'selection', minWidth: 40, maxWidth: 50 },
-      { prop: 'id', width: '40px', sort: true},
-      { prop: 'title', sort: true},
-      { prop: 'userData.name', sort: true},
+      { prop: 'id', width: '40px', sort: true },
+      { prop: 'title', sort: true },
+      { prop: 'userData.name', sort: true },
       { prop: 'userData.username', sort: true }
     )
     .build();
@@ -124,36 +133,39 @@ export class PostsComponent implements OnInit, AfterViewInit {
     .create();
 
   ngAfterViewInit(): void {
-
-    this.filterString$ = fromEvent<KeyboardEvent>(this.finput.nativeElement, 'keyup')
-    .pipe(
+    this.filterString$ = fromEvent<KeyboardEvent>(
+      this.finput.nativeElement,
+      'keyup'
+    ).pipe(
       tap(d => console.log(d)),
-      map(event=> (event.target as HTMLInputElement).value),
+      map(event => (event.target as HTMLInputElement).value),
       startWith(''),
       debounceTime(400),
       distinctUntilChanged(),
       share()
-    )
+    );
     this.filterString$
-    .pipe(
-      tap(data => this.a = data ),
-      tap(d => this.ds.syncFilter())
-    )
-    .subscribe()
+      .pipe(
+        tap(data => (this.a = data)),
+        tap(d => this.ds.syncFilter())
+      )
+      .subscribe();
 
     this.myPredicate = (item: any, columns: PblColumn[]): boolean => {
       const title = this.ds.hostGrid.columnApi.findColumn('title').getValue(item);
       const name = this.ds.hostGrid.columnApi.findColumn('userData.name').getValue(item);
-      const username = this.ds.hostGrid.columnApi.findColumn('userData.username').getValue(item);
+      const username = this.ds.hostGrid.columnApi
+        .findColumn('userData.username')
+        .getValue(item);
 
       return (
         title.toLowerCase().indexOf(this.a.toLowerCase()) !== -1 ||
         name.toLowerCase().indexOf(this.a.toLowerCase()) !== -1 ||
         username.toLowerCase().indexOf(this.a.toLowerCase()) !== -1
-      )
-  }
+      );
+    };
 
-  this.ds.setFilter(this.myPredicate)
+    this.ds.setFilter(this.myPredicate);
 
     // this.test$ = this.filterString$.pipe(
     //   tap(s => console.log(s)),
@@ -188,28 +200,28 @@ export class PostsComponent implements OnInit, AfterViewInit {
 
   clearSort() {
     // this.ds.setSort()
-    this.ds.setFilter()
-    
+    this.ds.setFilter();
+  }
+
+  onClickEvents(event: PblNgridRowEvent<ExtendedPost>) {
+    console.log(event.row.id);
   }
 
   manualSorting() {
     const currentSort = this.ds.sort;
-    let order: PblNgridSortOrder = 'desc';
-    const key = 'id'
+    const order: PblNgridSortOrder = 'desc';
+    const key = 'id';
 
     // IF IM RECLICKING COLUMN THAT HAS ALREADY GOT SORTING ACTIVE
-    this.ds.hostGrid.setSort(key, {order: order})
-    this.ds.refresh()
-
+    this.ds.hostGrid.setSort(key, { order: order });
+    this.ds.refresh();
 
     console.log(currentSort);
-    
   }
 
   clearFilter() {
     this.finput.nativeElement.value = '';
-    const e = new KeyboardEvent('keyup')
-    this.renderer.invokeElementMethod(this.finput.nativeElement, 'dispatchEvent', [e])
-  
+    const e = new KeyboardEvent('keyup');
+    this.renderer.invokeElementMethod(this.finput.nativeElement, 'dispatchEvent', [e]);
   }
 }

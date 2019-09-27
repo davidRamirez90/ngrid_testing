@@ -49,6 +49,8 @@
   matSort
   [dataSource]="ds"
   [columns]="columns"
+  targetEvents
+  (rowClick)="onClickEvents($event)"
   matCheckboxSelection="selection"
   class="pbl-ngrid-cell-ellipsis pbl-ngrid-header-cell-ellipsis"
 >

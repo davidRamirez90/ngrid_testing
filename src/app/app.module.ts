@@ -21,6 +21,7 @@ import { NGXS_PLUGINS, NgxsModule } from '@ngxs/store';
 
 import { MATERIAL } from './material-imports';
 import { AppState } from './store/posts.state';
+import { PblNgridTargetEventsModule } from '@pebula/ngrid/target-events';
 
 @NgModule({
   declarations: [AppComponent, HomeComponent, PostsComponent, PostComponent],
@@ -37,6 +38,7 @@ import { AppState } from './store/posts.state';
     FlexLayoutModule,
     FormsModule,
     PblNgridMatSortModule,
+    PblNgridTargetEventsModule,
     NgxsModule.forRoot([AppState], { developmentMode: true }),
     NgxsReduxDevtoolsPluginModule.forRoot()
   ],
